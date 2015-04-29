@@ -1,0 +1,299 @@
+<html>
+  <head>
+    <title>Real Time Voting</title> 
+       <!-- Latest compiled and minified CSS -->
+     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+    <script src= "http://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+    
+    
+  </head>
+  <body>
+      <!-- Fixed navbar -->
+    <nav class="navbar navbar-default navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="#">Poll</a>
+        </div>
+      </div>
+    </nav>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <div class="container">
+
+      <div class = "row">
+          <div class="col-md-2">
+          
+          </div>
+          <div class="col-md-8" id = "content">
+            
+            <form>
+              <div class = "row">
+                <b style = "font-size: 15px;">Question Content :</b><br>
+              </div>
+              <div class = "row">
+                  <b id = "question" style = "font-size: 25px;"></b><br>
+              </div>
+              <div class = "row" id = "checktype" style = "display: none">
+              </div>
+              <div class = "row" id = "getidquestion" style = "display: none">
+              </div>
+              <br>
+              <div class = "row">
+                <b style = "font-size: 15px;">Choices :</b><br><br>
+              </div>
+              <div class = "row" id = "answerappend">
+              </div>
+              <div class = "row">
+                <div class="col-md-3">          
+                </div>
+                <div class="col-md-6">
+                  <br>
+                  <button type="submit" class="btn btn-primary" style = "width: 50%">Vote</button>
+                </div>
+                <div class="col-md-3">                
+                </div>                
+              </div>
+            </form>
+          </div>
+        
+        <div class="col-md-2" id = "realtime" >
+          
+        </div>
+      </div>
+    </div> <!-- /container -->
+  </body>
+  <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+  <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+  <script src= "http://code.highcharts.com/highcharts.js"></script>
+
+ 
+  <script>
+    $(document).ready(function(){
+      
+      $.getJSON("http://127.0.0.1:3000/questionbyid", function(data){
+        for (var i=0, len=data.length; i < len; i++) {
+        //console.log(data[i].answer_content);
+        var ab = data[i].question_type;
+        console.log(ab);
+        $("#checktype").html(ab);
+        $("#getidquestion").html(data[i].question_id);
+        $("#question").html(data[i].question_content)
+        }
+      });
+
+      $.getJSON("http://127.0.0.1:3000/answerbyid", function(data){
+        var x=document.getElementById("checktype");
+        console.log(x.innerHTML);
+        if(x.innerHTML.localeCompare("single") == 0)
+          console.log("yeah");
+        if(x.innerHTML.localeCompare("single") == 0)
+        {
+          var json = "";
+
+          var signalArr = [];
+          var total = 0;
+          for(var i=0, len=data.length; i < len; i++)
+          {
+            signalArr[signalArr.length] = parseInt(data[i].answer_vote);
+            total = total + parseInt(data[i].answer_vote);
+          }
+          console.log(signalArr);
+
+
+          var percentArr = [];
+          if(total != 0)
+          {
+            for(var i=0, len=data.length; i < len; i++)
+            {
+              percentArr[percentArr.length] = parseFloat((data[i].answer_vote / total) * 100);
+            }
+            console.log(percentArr);
+          }
+          
+
+
+        for (var i=0, len=data.length; i < len; i++) {
+            console.log(data[i].answer_content);
+            $('<div class="row"><input type="radio" name="answer" id="'+data[i].answer_value+'">'+data[i].answer_content+'</div><div id="chart'+data[i].answer_value+'" style = "background-color: green; text-align: center; color: white; width:'+(Math.round(percentArr[i]))+'%; height: 30px;" >'+(Math.round(percentArr[i]))+'% ('+data[i].answer_vote+' votes)</div><br>').appendTo("#answerappend");
+
+            // $('<div class="row"><div class = "col-md-2" id ="sam'+data[i].answer_value+'">'+data[i].answer_vote+'</div><div class = "col-md-10">'+data[i].answer_content+'</div></div>').appendTo("#realtime");
+          }
+        }
+        else
+        {
+          if(x.innerHTML.localeCompare("mutiple") == 0)
+          {
+          var signalArr = [];
+          var total = 0;
+          for(var i=0, len=data.length; i < len; i++)
+          {
+            signalArr[signalArr.length] = parseInt(data[i].answer_vote);
+            total = total + parseInt(data[i].answer_vote);
+          }
+          console.log(signalArr);
+
+
+          var percentArr = [];
+          if(total != 0)
+          {
+            for(var i=0, len=data.length; i < len; i++)
+            {
+              percentArr[percentArr.length] = parseFloat((data[i].answer_vote / total) * 100);
+            }
+            console.log(percentArr);
+          }
+            for (var i=0, len=data.length; i < len; i++) {
+            console.log(data[i].answer_content);
+            $('<div class="row"><input type="checkbox" name="answer" value="'+data[i].answer_value+'" id="'+data[i].answer_value+'">'+data[i].answer_content+'</div><div id="chart'+data[i].answer_value+'" style = "background-color: green; text-align: center; color: white; width:'+(Math.round(percentArr[i]))+'%; height: 30px;" >'+(Math.round(percentArr[i]))+'% ('+data[i].answer_vote+' votes)</div><br>').appendTo("#answerappend");
+            }
+          }
+          
+        }
+      });
+    });
+
+
+  </script>
+  <script>
+    var socket = io();
+    var y= document.getElementById("checktype");
+    var id = document.getElementById("getidquestion");
+    $('form').submit(function(){
+      if(y.innerHTML.localeCompare("single") == 0)
+      {
+        //alert("dm");
+        var check = document.getElementsByName('answer');
+        for(var i = 0; i < check.length; i++)
+        {
+          if(check[i].checked)
+          {
+            socket.emit('Realtimechartsingle',{question_id: id.innerHTML, value: i} );
+            //check[i].checked = false;
+            break;
+          }
+        }
+      }
+      else
+      {
+        if(y.innerHTML.localeCompare("mutiple") == 0)
+        {
+          var check = document.getElementsByName('answer');
+          var arr = "";
+          for(var i = 0; i < check.length; i++)
+          {
+            
+            if(check[i].checked)
+            {
+              console.log(check[i].id);
+              arr = arr + " " + check[i].value;
+            }
+
+          }
+          console.log(arr);
+          socket.emit('Realtimechartmutiple',{question_id: id.innerHTML, arrayValue: arr} );
+
+        }
+      }
+      return false;
+    });
+
+    socket.on('UpdateRealtime', function(msg){
+      var id = document.getElementById("getidquestion");
+      if(msg.id.localeCompare(id.innerHTML) == 0)
+      {
+        //document.getElementById("sam"+msg.value+"").innerHTML = msg.answer_vote;
+
+        $.getJSON("http://127.0.0.1:3000/drawchartbyid/"+msg.id, function(data){
+          console.log(data);
+          var signalArr = [];
+          var total = 0;
+          for(var i=0, len=data.length; i < len; i++)
+          {
+            signalArr[signalArr.length] = parseInt(data[i].answer_vote);
+            total = total + parseInt(data[i].answer_vote);
+          }
+          console.log(signalArr);
+          var percentArr = [];
+          if(total != 0)
+          {
+            for(var i=0, len=data.length; i < len; i++)
+            {
+              percentArr[percentArr.length] = parseFloat((data[i].answer_vote / total) * 100);
+            }
+            console.log(percentArr);
+          }
+          else
+          {
+            for(var i=0, len=data.length; i < len; i++)
+            {
+              percentArr[percentArr.length] = parseFloat(0.0);
+            }
+          }
+
+          for(var i=0, len=percentArr.length; i < len; i++)
+          {
+            $("#chart" + i).css({"width": ""+percentArr[i]+"%"});
+            $("#chart" + i).html(""+(Math.round(percentArr[i])) + "% ("+data[i].answer_vote+" votes)");
+          }
+        });
+
+      }
+
+      
+      
+
+    });
+  </script>
+
+  <!-- socket.on('UpdateRealtime', function(msg){
+      var id = document.getElementById("getidquestion");
+      if(msg.id.localeCompare(id.innerHTML) == 0)
+      {
+        //document.getElementById("sam"+msg.value+"").innerHTML = msg.answer_vote;
+
+        $.getJSON("http://127.0.0.1:3000/drawchartbyid/"+msg.id, function(data){
+          console.log(data);
+          var signalArr = [];
+          var total = 0;
+          for(var i=0, len=data.length; i < len; i++)
+          {
+            signalArr[signalArr.length] = parseInt(data[i].answer_vote);
+            total = total + parseInt(data[i].answer_vote);
+          }
+          console.log(signalArr);
+          var percentArr = [];
+          if(total != 0)
+          {
+            for(var i=0, len=data.length; i < len; i++)
+            {
+              percentArr[percentArr.length] = parseFloat((data[i].answer_vote / total) * 100);
+            }
+            console.log(percentArr);
+          }
+          else
+          {
+            for(var i=0, len=data.length; i < len; i++)
+            {
+              percentArr[percentArr.length] = parseFloat(0.0);
+            }
+          }
+
+          for(var i=0, len=percentArr.length; i < len; i++)
+          {
+            $("#chart" + i).css({"width": ""+percentArr[i]+"%"});
+            $("#chart" + i).html(""+(Math.round(percentArr[i])) + "% ("+data[i].answer_vote+" votes)");
+          }
+        });
+
+      }
+
+      
+      
+
+    }); -->
+</html
+
+

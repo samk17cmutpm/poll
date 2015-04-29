@@ -1,0 +1,252 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Real Time Voting</title> 
+       <!-- Latest compiled and minified CSS -->
+     <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css"> -->
+     <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    <script src= "http://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+    
+    
+  </head>
+  <body>
+      <!-- Fixed navbar -->
+    <nav class="navbar navbar-default navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="#"><b>Real Time Voting</b></a>
+        </div>
+      </div>
+    </nav>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <div class="container">
+      <div class = "row">
+        <div class="col-md-1"></div>
+        <div class="col-md-9" id = "alert"></div>
+        <div class="col-md-2"></div>
+      </div>
+      <div class = "row" id = "identify" style = "display: none">
+      </div>
+      <div class = "row">
+        <div class="col-md-8">
+          <form>
+          <ul class = "question">
+            <li style = "list-style-type: none">
+              <div class="form-group">
+                <input type="text" class="form-control" id="question" placeholder="Place Your Question Here">
+              </div>
+            </li>
+          </ul>
+          <div class = "row">
+            <div class="col-md-3">
+            </div>
+            <div class="col-md-3">
+              <img src="image/singe.png" id = "img_single"  style ="border: solid 2px red" >
+            </div>
+            <div class="col-md-3">
+              <img src="image/mutiple.png" id = "img_mutiple">
+            </div>
+            <div class="col-md-3">
+            </div>
+          </div>
+          <div class = "row" style = "display: none">
+            <div class="form-group">
+              <input type="radio" name="type" id="single" checked value = "single">Red<br>
+              <input type="radio" name="type" id="mutiple" value = "mutiple">Blue
+            </div>
+
+          </div>
+          <br>
+          <br>
+          <ul class = "answer_yes_no">
+            <li style = "list-style-type: none">            
+              <div class="form-group">
+                <input type="text" class="form-control" id="as1" placeholder="Yes" style = "width: 95%">
+              </div>
+            </li>
+            <li style = "list-style-type: none">          
+              <div class="form-group">
+                <input type="text" class="form-control" id="as2" placeholder="No" style = "width: 95%">
+              </div>
+            </li>            
+          </ul>
+          <ul class = "answer_add_more">
+            <li style = "list-style-type: none">
+              <div class="form-group">
+                <input type="text" class="form-control" id="asmore" placeholder="Add more answers" style = "width: 95%">
+              </div>
+            </li>
+            <li style = "list-style-type: none">
+              <div class = "row">
+                <div class="col-md-9">
+                    <div class="form-group">
+                <input type="text" class="form-control" id="username" placeholder="Your Name">
+              </div>
+            </div>
+            <div class="col-md-3">
+              <button type="submit" class="btn btn-primary" style = "width: 95%">Ask Now</button>
+            </div>
+          </div>
+            </li>
+          </ul>
+          <br>
+          <br>
+          
+          </form>
+        </div>
+        <div class="col-md-3" style = "border: 1px blue solid; height: 500px;  overflow: scroll" ng-app="myApp" ng-controller="getAllQuestionCtrl">
+          <div style = "text-align: center"><h3>Latest Poll</h3></div>
+          <ul id = "latest" ng-repeat="x in names">
+            
+            <li style = "list-style-type: none; width: 100%"><div><a ng-href="http://127.0.0.1:3000/question/{{ x.question_id }}"><b style = "font-size:18px; color:blue">{{ x.question_content }}</b></a><br><span style = "font-size:13px; color:blue">Post by:<br> {{x.question_username}}</span></div></li><br>
+          </ul>
+        </div>
+        <div class="col-md-1"></div>
+      </div>
+    </div> <!-- /container -->
+  </body>
+  <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+  <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+  <script src= "http://code.highcharts.com/highcharts.js"></script>
+
+<script>
+  var temp = 3; 
+  $(document).ready(function(){
+      $("#asmore").on("click", function(){
+          $('<li style = "list-style-type: none"><div class="form-group"><input type="text" class="form-control" id="as'+temp+'" placeholder="Place your new answer here" style = "width: 95%"> </div></li>').appendTo(".answer_yes_no");
+          $("input[type='text']")[temp].focus();
+          temp++;
+      });
+  });
+  var socket = io();
+  $('form').submit(function(){
+      //alert(temp);
+      var arr = ""; 
+      var signal = "000";
+      var id_qs = "" + Math.floor((Math.random() * 10000) + 1) + Math.floor((Math.random() * 10000) + 1) + Math.floor((Math.random() * 10000) + 1) ;
+      //$("#identify").html(id_qs);
+      console.log(id_qs);
+      $("#identify").html(id_qs);
+
+      var question_content = document.getElementById('question').value;
+      var username = document.getElementById('username').value;
+      var type = $('input[name="type"]:checked').val();
+      //alert(type);
+
+      if(!question_content)
+      {
+        alert("Please fill The Question's content !");
+        $("#question").focus();
+
+      }
+      else
+      {
+        if(!username)
+        {
+          alert("Please fill your name !");
+          $("#username").focus();
+        }
+        else
+        {
+          //alert(question_content);
+          var rmlast = 0;
+          for(var i = 1; i < temp; i++ )
+          {
+            var temp_string = document.getElementById('as' + i).value;
+            temp_string = temp_string.trim();
+            if(temp_string)
+            {
+              arr = arr.concat(temp_string);
+              rmlast = temp_string.length + rmlast;
+              if(rmlast < 10)
+              {
+                signal = signal + "00" + rmlast;
+              }
+              else
+              {
+                if(rmlast < 100)
+                {
+                  signal = signal + "0" + rmlast;
+                }
+                else
+                {
+                  signal = signal + rmlast;
+                }
+              }
+            }            
+          }
+          //alert(arr);
+          //continue here
+          if(signal.length < 9)
+          {
+            alert("Please add at least two answers");
+            $("#asmore").focus();
+          }
+          else
+          {
+            //send request to server
+            socket.emit('Question',{question: question_content, answerstring: arr, signalstring: signal, user: username, typequestion: type, indentify: id_qs});
+            $("#question").val('');
+            $("#username").val('');
+            for(var i = 1; i < temp; i++)
+            {
+              $("#as" + i).val('');
+            }
+            
+            //set null after emitting
+          }
+          
+        }
+        
+      }      
+      return false;
+    });
+//get request from server
+    socket.on('UpdateLatest', function(msg){
+     
+      //alert(msg.question + " dm");
+      // $('<li style = "list-style-type: none"><div class="form-group">'+ msg.question +'</div></li>').appendTo("#latest");
+      var id = document.getElementById("identify");
+      if(msg.identify.localeCompare(id.innerHTML) == 0)
+      {
+        $("#alert").html('<div class="alert alert-success" role="alert" style = "text-align: center;">Congratulation, click here to vote for your poll, you can send it to your friends <a href="http://127.0.0.1:3000/question/'+msg.id_question+'"><b>Click Here</b></a></div>');
+      }
+      
+      $("#latest").prepend('<li style = "list-style-type: none"><div><a href="http://127.0.0.1:3000/question/'+msg.id_question+'"><b style = "font-size:18px; color:blue">'+msg.question+'</b></a><br><span style = "font-size:13px; color:blue">Post by: '+ msg.user +'</span></div></li><br>');
+      
+     
+    });
+
+  $(document).ready(function(){
+      $("#img_single").on("click", function(){
+          $(this).css('border', "solid 2px red");  
+          $("#img_mutiple").css('border', "none");  
+          $("#single").prop('checked', true);
+          $("#mutiple").prop('checked', false);
+      });
+  });
+
+  $(document).ready(function(){
+      $("#img_mutiple").on("click", function(){
+          $(this).css('border', "solid 2px red");  
+          $("#img_single").css('border', "none");  
+          $("#mutiple").prop('checked', true);
+          $("#single").prop('checked', false);
+      });
+  });
+</script>
+
+<script>
+    var app = angular.module('myApp', []);
+    app.controller('getAllQuestionCtrl', function($scope, $http) {
+      $http.get("http://127.0.0.1:3000/questionall")
+      .success(function (response) {$scope.names = response;});
+    });
+</script>
+
+
+</html>
