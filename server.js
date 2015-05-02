@@ -4,9 +4,12 @@ var io = require('socket.io')(http);
 var fs = require("fs");
 var QuestionPost = require("./model/question");
 var AnswerPost = require("./model/answer");
+
 //var app = express();
+
+
 var express = require('express');
-app.use(express.static(__dirname + '/public'));
+app.use(express.static('public'));
 // Retrieve
 
 
@@ -50,7 +53,7 @@ app.get('/question/:id', function (req, res) {
         a = req.params.id;
         console.log(a);
         //res.send(req.params.id);
-        res.sendfile('question.html');       
+        //res.sendfile('question.html');       
     }
 });
 
@@ -131,58 +134,6 @@ io.on('connection', function(socket){
     });
 
 
-    // QuestionPost.find({}, function(err, users) {
-    //   var userMap = {};
-
-    //   users.forEach(function(user) {
-    //     userMap[user._id] = user;
-    //   });
-
-    //   console.log(userMap);
-    // });
-
-    // AnswerPost.find({}, function(err, users) {
-    //   var userMap = {};
-
-    //   users.forEach(function(user) {
-    //     userMap[user._id] = user;
-    //   });
-
-    //   console.log(userMap);
-    // });379748318326
-
-    // Find record by id-question
-    // QuestionPost.find({question_id: "379748318326"}, function(err, users) {
-    //   var userMap = {};
-
-    //   users.forEach(function(user) {
-    //     userMap[user._id] = user;
-    //   });
-
-    //   console.log(userMap);
-    // });
-
-    // Find record by id-question
-    // AnswerPost.find({question_id: "379748318326"}, function(err, users) {
-    //   var userMap = {};
-
-    //   users.forEach(function(user) {
-    //     userMap[user._id] = user;
-    //   });
-
-    //   console.log(userMap);
-    // });
-
-    // QuestionPost.remove({}, function(err, users) {
-    //   if(err)
-    //   {
-    //     console.log('not ok');
-    //   }
-    //   else
-    //   {
-    //     console.log('ok');
-    //   }
-    // });
 
     //Get the signal from client
     var signalArr = [];
@@ -198,7 +149,7 @@ io.on('connection', function(socket){
     {
       answerArr[answerArr.length] = msg.answerstring.substring(signalArr[i], signalArr[i + 1]);
     }
-    console.log(answerArr);
+      console.log(answerArr);
 
     for(var i = 0; i < answerArr.length; i++)
     {
@@ -215,7 +166,6 @@ io.on('connection', function(socket){
     }
 
     io.emit('UpdateLatest',{question: msg.question, user: msg.user, id_question: id_qs, identify: msg.indentify} );
-
   });
     
 socket.on('Realtimechartsingle', function(msg){
