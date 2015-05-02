@@ -149,7 +149,7 @@
             $("#alert").html('<div class="alert alert-success" role="alert" style = "text-align: center;">Congratulation, click here to vote for your poll, you can send it to your friends <a href="#question/'+msg.id_question+'"><b>Click Here</b></a></div>');
           }
           
-          $("#latest").prepend('<div class = "row" style = "border-bottom: solid 1px blue;"><a href="#question/'+msg.id_question+'"><b style = "font-size:18px; color:blue">'+msg.question+'</b></a><br><span style = "font-size:13px; color:blue">Post by: '+ msg.user +'</span></div><br>');
+          $("#latest").prepend('<li style = "list-style-type: none"><div><a href="#question/'+msg.id_question+'"><b style = "font-size:18px; color:blue">'+msg.question+'</b></a><br><span style = "font-size:13px; color:blue">Post by: '+ msg.user +'</span></div></li><br>');
             norepeat = false;
           }
         });
@@ -160,7 +160,7 @@
         //console.log(data[i].answer_content);
         var ab = data[i].question_type;
         console.log(ab);
-        $('<div class = "row"><a href="#question/'+data[i].question_id+'"><b style = "font-size:18px; color:blue">'+data[i].question_content+'</b></a><br><span style = "font-size:13px; color:blue">Post by:<br> '+data[i].question_username+'</span></div><br>').appendTo("#latest");
+        $('<li style = "list-style-type: none; width: 100%"><div><a href="#question/'+data[i].question_id+'"><b style = "font-size:18px; color:blue">'+data[i].question_content+'</b></a><br><span style = "font-size:13px; color:blue">Post by:<br> '+data[i].question_username+'</span></div></li><br>').appendTo("#latest");
         }
     });
   
