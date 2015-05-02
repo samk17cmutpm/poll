@@ -54,25 +54,12 @@
         var socket = io();
 
           //get request from server
-    socket.on('UpdateLatest', function(msg){
-            
-             //alert("dm");
-          //alert(msg.question + " dm");
-          // $('<li style = "list-style-type: none"><div class="form-group">'+ msg.question +'</div></li>').appendTo("#latest");
-          var id = document.getElementById("identify");
-          if(msg.identify.localeCompare(id.innerHTML) == 0)
-          {
-            $("#alert").html('<div class="alert alert-success" role="alert" style = "text-align: center;">Congratulation, click here to vote for your poll, you can send it to your friends <a href="#question/'+msg.id_question+'"><b>Click Here</b></a></div>');
-          }
-          
-          $("#latest").prepend('<li style = "list-style-type: none"><div><a href="#question/'+msg.id_question+'"><b style = "font-size:18px; color:blue">'+msg.question+'</b></a><br><span style = "font-size:13px; color:blue">Post by: '+ msg.user +'</span></div></li><br>');
-         
-     
-      });
-        
+      
+        var norepeat = false;
         $('form').submit(function(){
           //alert(temp);
           var arr = ""; 
+          norepeat = true;
           var signal = "000";
           var id_qs = "" + Math.floor((Math.random() * 10000) + 1) + Math.floor((Math.random() * 10000) + 1) + Math.floor((Math.random() * 10000) + 1) ;
           //$("#identify").html(id_qs);
@@ -151,6 +138,20 @@
             
           }      
           return false;
+        });
+    socket.on('UpdateLatest', function(msg){
+          if(norepeat)
+          {
+            console.log("hu");
+          var id = document.getElementById("identify");
+          if(msg.identify.localeCompare(id.innerHTML) == 0)
+          {
+            $("#alert").html('<div class="alert alert-success" role="alert" style = "text-align: center;">Congratulation, click here to vote for your poll, you can send it to your friends <a href="#question/'+msg.id_question+'"><b>Click Here</b></a></div>');
+          }
+          
+          $("#latest").prepend('<li style = "list-style-type: none"><div><a href="#question/'+msg.id_question+'"><b style = "font-size:18px; color:blue">'+msg.question+'</b></a><br><span style = "font-size:13px; color:blue">Post by: '+ msg.user +'</span></div></li><br>');
+            norepeat = false;
+          }
         });
 
 

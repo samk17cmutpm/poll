@@ -124,6 +124,7 @@ io.on('connection', function(socket){
                           question_type: msg.typequestion, question_username: msg.user});
 
    // Save model to MongoDB
+   
     post_question.save(function (err) {
       if (err) {
        return err;
@@ -160,11 +161,11 @@ io.on('connection', function(socket){
          return err;
         }
         else {
-         console.log("Post question Successfully");
+         console.log("Answer post Successfully");
         }
       });
     }
-
+    console.log(id_qs);
     io.emit('UpdateLatest',{question: msg.question, user: msg.user, id_question: id_qs, identify: msg.indentify} );
   });
     
