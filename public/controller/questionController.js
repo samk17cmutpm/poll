@@ -46,6 +46,13 @@ scotchApp.controller('questionController', ['$routeParams', function($routeParam
             }
             // console.log(percentArr);
           }
+          else
+          {
+            for(var i=0, len=data.length; i < len; i++)
+            {
+              percentArr[percentArr.length] = parseFloat(0 * 100);
+            }
+          }
           
 
 
@@ -78,6 +85,13 @@ scotchApp.controller('questionController', ['$routeParams', function($routeParam
               percentArr[percentArr.length] = parseFloat((data[i].answer_vote / total) * 100);
             }
             // console.log(percentArr);
+          }
+          else
+          {
+            for(var i=0, len=data.length; i < len; i++)
+            {
+              percentArr[percentArr.length] = parseFloat(0 * 100);
+            }
           }
             for (var i=0, len=data.length; i < len; i++) {
             // console.log(data[i].answer_content);

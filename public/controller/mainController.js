@@ -56,11 +56,12 @@
 
           //get request from server
       
-        var norepeat = false;
+        var norepeat = 0;
+        var appentNewPage = 0;
         $('form').submit(function(){
           //alert(temp);
           var arr = ""; 
-          norepeat = true;
+          norepeat = 1;
           var signal = "000";
           var id_qs = "" + Math.floor((Math.random() * 10000) + 1) + Math.floor((Math.random() * 10000) + 1) + Math.floor((Math.random() * 10000) + 1) ;
           //$("#identify").html(id_qs);
@@ -141,9 +142,11 @@
           return false;
         });
     socket.on('UpdateLatest', function(msg){
-          if(norepeat)
+          var y = 0;
+          var z = 0;
+          if(norepeat === 1)
           {
-            // console.log("hu");
+            console.log("==>" + (y++));
           var id = document.getElementById("identify");
           if(msg.identify.localeCompare(id.innerHTML) == 0)
           {
@@ -151,7 +154,20 @@
           }
           
           $("#latest").prepend('<div class = "row" ><a href="#question/'+msg.id_question+'"><b style = "font-size:14px; color:blue; padding: 25px;">'+msg.question+'</b></a><br><span style = "font-size:13px; color:blue; padding: 25px;">Post by:</span><br><span style = "font-size:13px; color:blue; padding: 25px;"> '+msg.user+'</span></div><br>');
-            norepeat = false;
+            norepeat = 2;
+          }
+          else
+          {
+              if(appentNewPage === 0)
+              {
+                if(norepeat === 0)
+                {
+                  console.log("=======>" + (z++));
+                  $("#latest").prepend('<div class = "row" ><a href="#question/'+msg.id_question+'"><b style = "font-size:14px; color:blue; padding: 25px;">'+msg.question+'</b></a><br><span style = "font-size:13px; color:blue; padding: 25px;">Post by:</span><br><span style = "font-size:13px; color:blue; padding: 25px;"> '+msg.user+'</span></div><br>');
+                  appentNewPage = 1;
+                }
+                appentNewPage = 1;
+              }
           }
         });
 
