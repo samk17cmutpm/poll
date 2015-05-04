@@ -150,7 +150,7 @@
             $("#alert").html('<div class="alert alert-success" role="alert" style = "text-align: center;">Congratulation, click here to vote for your poll, you can send it to your friends <a href="#question/'+msg.id_question+'"><b>Click Here</b></a></div>');
           }
           
-          $("#latest").prepend('<div class = "row" style = "border-bottom: solid 1px blue;"><a href="#question/'+msg.id_question+'" ><b style = "font-size:18px; color:blue">'+msg.question+'</b></a><br><span style = "font-size:13px; color:blue;">Post by: '+ msg.user +'</span></div><br>');
+          $("#latest").prepend('<div class = "row" ><a href="#question/'+msg.id_question+'"><b style = "font-size:14px; color:blue; padding: 25px;">'+msg.question+'</b></a><br><span style = "font-size:13px; color:blue; padding: 25px;">Post by:</span><br><span style = "font-size:13px; color:blue; padding: 25px;"> '+msg.user+'</span></div><br>');
             norepeat = false;
           }
         });

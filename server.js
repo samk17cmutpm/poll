@@ -165,9 +165,13 @@ app.get('/questionbyid/:id', function (req, res) {
 });
 
 app.get('/answerbyid/:id', function (req, res) {
-    AnswerPost.find({question_id: req.params.id}, function(err, users) {
-          res.json(users);
-        });
+    // AnswerPost.find({question_id: req.params.id}, function(err, users) {
+    //       res.json(users);
+    //     });
+    AnswerPost.find({question_id: req.params.id}).sort({answer_value : 1}).exec(function(err, users){
+        res.json(users);
+    });
+    
 });
 
 app.get('/drawchartbyid/:id', function (req, res) {
