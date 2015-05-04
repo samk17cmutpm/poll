@@ -15,6 +15,30 @@
                 templateUrl : 'view/contact.html',
                 controller  : 'contactController'
             })
+            
+            //Log in :)
+            .when('/signin', {
+                templateUrl : 'view/signin.html',
+                controller  : 'signinController'
+            })
+
+            //Log in :)
+            .when('/logout', {
+                templateUrl : 'view/logout.html',
+                controller  : 'logoutController'
+            })
+
+            //Log in :)
+            .when('/signup', {
+                templateUrl : 'view/signup.html',
+                controller  : 'signupController'
+            })
+
+            //Log in :)
+            .when('/management/:id', {
+                templateUrl : 'view/management.html',
+                controller  : 'managementController'
+            })
 
             // route for the question page
             .when('/question/:id', {

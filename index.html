@@ -14,6 +14,14 @@
   <script src="js/jquery-1.11.1.js"></script>
   <script src="js/socket.io-1.2.0.js"></script>
   <script src="controller/script.js"></script>
+  <script src="controller/mainController.js"></script>
+  <script src="controller/questionController.js"></script>
+  <script src="controller/aboutController.js"></script>
+  <script src="controller/signinController.js"></script>
+  <script src="controller/signupController.js"></script>
+  <script src="controller/managementController.js"></script>
+  <script src="controller/logoutController.js"></script>
+
 </head>
 
 <!-- define angular controller -->
@@ -27,18 +35,17 @@
 
       <ul class="nav navbar-nav navbar-right">
         <li><a href="#"><i class="fa fa-home"></i> Home</a></li>
+        <li id = "sign-in"><a href="#signin"><i class="fa fa-sign-in"></i> Sign In</a></li>
+        <li id = "sign-up"><a href="#signup"><i class="fa fa-users"></i> Sign Up</a></li>
         <li><a href="#contact"><i class="fa fa-comment"></i> Contact</a></li>
       </ul>
     </div>
   </nav>
-
-  <div id="main">
-  
     <!-- angular templating -->
         <!-- this is where content will be injected -->
-    <div ng-view></div>
+  <div ng-view></div>
     
-  </div>
+ 
   
   <footer class="text-center">
     <p>Web application for voting real time</p>

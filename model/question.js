@@ -13,6 +13,7 @@ var questionSchema = new mongoose.Schema({
   question_content: String, 
   question_type: String,
   question_username: String,
+  question_email: String,
   question_date: { type: Date, default: Date.now }
 });
 
