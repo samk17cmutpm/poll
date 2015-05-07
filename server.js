@@ -175,9 +175,12 @@ app.get('/answerbyid/:id', function (req, res) {
 });
 
 app.get('/drawchartbyid/:id', function (req, res) {
-    AnswerPost.find({question_id: req.params.id}, function(err, users) {
-          res.json(users);
-        });
+    // AnswerPost.find({question_id: req.params.id}, function(err, users) {
+    //       res.json(users);
+    //     });
+    AnswerPost.find({question_id: req.params.id}).sort({answer_value : 1}).exec(function(err, users){
+      res.json(users);
+    });
 });
 
 
@@ -185,9 +188,12 @@ app.get('/drawchartbyid/:id', function (req, res) {
 
 //API to get the questions to update latest
 app.get('/questionall', function (req, res) {
-  QuestionPost.find({}, function(err, users) {
-      res.json(users);
-    }).sort([['question_date', 'descending']]);    
+  // QuestionPost.find({}, function(err, users) {
+  //     res.json(users);
+  //   }).sort([['question_date', 'descending']]);  
+  QuestionPost.find({}).sort({question_date : 1}).exec(function(err, users){
+        res.json(users);
+    });  
 });
 
 

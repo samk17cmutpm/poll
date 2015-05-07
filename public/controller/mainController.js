@@ -37,7 +37,7 @@
         });
         $(document).ready(function(){
           $("#img_single").on("click", function(){
-              $(this).css('border', "solid 2px red");  
+              $(this).css('border', "solid 2px #337AB7");  
               $("#img_mutiple").css('border', "none");  
               $("#single").prop('checked', true);
               $("#mutiple").prop('checked', false);
@@ -46,7 +46,7 @@
 
         $(document).ready(function(){
           $("#img_mutiple").on("click", function(){
-              $(this).css('border', "solid 2px red");  
+              $(this).css('border', "solid 2px #337AB7");  
               $("#img_single").css('border', "none");  
               $("#mutiple").prop('checked', true);
               $("#single").prop('checked', false);
@@ -128,10 +128,13 @@
                 socket.emit('Question',{question: question_content, answerstring: arr, signalstring: signal, user: username, typequestion: type, indentify: id_qs, questionemail: question_email});
                 $("#question").val('');
                 $("#username").val('');
-                for(var i = 1; i < temp; i++)
-                {
-                  $("#as" + i).val('');
-                }
+                temp = 3;
+                $("#reTryUpdate").html('<li style = "list-style-type: none"><div class="form-group"><input type="text" class="form-control" id="as1" placeholder="Yes" style = "width: 95%"></div></li><li style = "list-style-type: none"><div class="form-group"><input type="text" class="form-control" id="as2" placeholder="No" style = "width: 95%"></div></li>');
+                console.log("========================================>")
+                // for(var i = 1; i < temp; i++)
+                // {
+                //   $("#as" + i).val('');
+                // }
                 
                 //set null after emitting
               }
