@@ -3,6 +3,11 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var fs = require("fs");
 
+// Import events module
+var events = require('events');
+// Create an eventEmitter object
+var eventEmitter = new events.EventEmitter();
+
 //These are all tables from database
 var QuestionPost = require("./model/question");
 var AnswerPost = require("./model/answer");
@@ -17,6 +22,45 @@ app.use(bodyParser.json({ type: 'application/vnd.api+json' }));
 app.use(bodyParser.urlencoded({extended: true}));
 
 var sess;
+
+eventEmitter.on('RemoveAllRecordsForTesting', function(){
+
+  QuestionPost.remove({}, function(err, users) {
+      if(err)
+      {
+        console.log('not ok');
+      }
+      else
+      {
+        console.log('ok');
+      }
+    });
+      AnswerPost.remove({}, function(err, users) {
+      if(err)
+      {
+        console.log('not ok');
+      }
+      else
+      {
+        console.log('ok');
+      }
+    });
+
+    UserPost.remove({}, function(err, users) {
+      if(err)
+      {
+        console.log('not ok');
+      }
+      else
+      {
+        console.log('ok');
+      }
+    });
+
+});
+
+
+
 // Retrieve
 app.post('/login',function(req,res){
   sess=req.session; 
@@ -96,27 +140,8 @@ app.get('/logout',function(req,res){
 
 
 app.get('/', function(req, res){
-    //  QuestionPost.remove({}, function(err, users) {
-    //   if(err)
-    //   {
-    //     console.log('not ok');
-    //   }
-    //   else
-    //   {
-    //     console.log('ok');
-    //   }
-    // });
-    //   AnswerPost.remove({}, function(err, users) {
-    //   if(err)
-    //   {
-    //     console.log('not ok');
-    //   }
-    //   else
-    //   {
-    //     console.log('ok');
-    //   }
-    // });
-  //res.end('exist');
+//Remove all records for testing
+  // eventEmitter.emit('RemoveAllRecordsForTesting');
   res.sendfile('index.html');
 });
 
