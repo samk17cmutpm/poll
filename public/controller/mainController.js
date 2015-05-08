@@ -144,34 +144,60 @@
           }      
           return false;
         });
+    var demtongcong = 0;
     socket.on('UpdateLatest', function(msg){
           var y = 0;
           var z = 0;
-          if(norepeat === 1)
-          {
-            console.log("==>" + (y++));
+          demtongcong = demtongcong + 1;
+          console.log(demtongcong);
+          // if(norepeat === 1)
+          // {
+          //   console.log("==>" + (y++));
+          // var id = document.getElementById("identify");
+          // if(msg.identify.localeCompare(id.innerHTML) == 0)
+          // {
+          //   $("#alert").html('<div class="alert alert-success" role="alert" style = "text-align: center;">Congratulation, click here to vote for your poll, you can send it to your friends <a href="#question/'+msg.id_question+'"><b>Click Here</b></a></div>');
+          // }
+          
+          // $("#latest").prepend('<div class = "row" ><a href="#question/'+msg.id_question+'"><b style = "font-size:14px; color:blue; padding: 25px;">'+msg.question+'</b></a><br><span style = "font-size:13px; color:blue; padding: 25px;">Post by:</span><br><span style = "font-size:13px; color:blue; padding: 25px;"> '+msg.user+'</span></div><br>');
+          //   norepeat = 2;
+          // }
+          // else
+          // {
+          //     if(appentNewPage === 0)
+          //     {
+          //       if(norepeat === 0)
+          //       {
+          //         console.log("=======>" + (z++));
+          //         $("#latest").prepend('<div class = "row" ><a href="#question/'+msg.id_question+'"><b style = "font-size:14px; color:blue; padding: 25px;">'+msg.question+'</b></a><br><span style = "font-size:13px; color:blue; padding: 25px;">Post by:</span><br><span style = "font-size:13px; color:blue; padding: 25px;"> '+msg.user+'</span></div><br>');
+          //         appentNewPage = 1;
+          //       }
+          //       appentNewPage = 1;
+          //     }
+          // }
+
           var id = document.getElementById("identify");
+          var abcdef = "";
           if(msg.identify.localeCompare(id.innerHTML) == 0)
           {
             $("#alert").html('<div class="alert alert-success" role="alert" style = "text-align: center;">Congratulation, click here to vote for your poll, you can send it to your friends <a href="#question/'+msg.id_question+'"><b>Click Here</b></a></div>');
           }
+          $("#latest").html('<div class = "row"></div>');
+          $.getJSON("http://127.0.0.1:3000/questionall", function(data){
+                for (var len=data.length, i=len -1 ; i >= 0; i--) {
+                //console.log(data[i].answer_content);
+                var ab = data[i].question_type;
+                // console.log(ab);
+                // $('<div class = "row" ><a href="#question/'+data[i].question_id+'"><b style = "font-size:14px; color:blue; padding: 25px;">'+data[i].question_content+'</b></a><br><span style = "font-size:13px; color:blue; padding: 25px;">Post by:</span><br><span style = "font-size:13px; color:blue; padding: 25px;"> '+data[i].question_username+'</span></div><br>').appendTo("#latest");
+                abcdef = abcdef + '<div class = "row" ><a href="#question/'+data[i].question_id+'"><b style = "font-size:14px; color:blue; padding: 25px;">'+data[i].question_content+'</b></a><br><span style = "font-size:13px; color:blue; padding: 25px;">Post by:</span><br><span style = "font-size:13px; color:blue; padding: 25px;"> '+data[i].question_username+'</span></div><br>';
+                $("#latest").html(abcdef);
+                // $('<div class = "row" ><a href="#question/'+data[i].question_id+'"><b style = "font-size:14px; color:blue; padding: 25px;">'+data[i].question_content+'</b></a><br><span style = "font-size:13px; color:blue; padding: 25px;">Post by:</span><br><span style = "font-size:13px; color:blue; padding: 25px;"> '+data[i].question_username+'</span></div><br>').appendTo("#latest");
+                 }
+          });
           
-          $("#latest").prepend('<div class = "row" ><a href="#question/'+msg.id_question+'"><b style = "font-size:14px; color:blue; padding: 25px;">'+msg.question+'</b></a><br><span style = "font-size:13px; color:blue; padding: 25px;">Post by:</span><br><span style = "font-size:13px; color:blue; padding: 25px;"> '+msg.user+'</span></div><br>');
-            norepeat = 2;
-          }
-          else
-          {
-              if(appentNewPage === 0)
-              {
-                if(norepeat === 0)
-                {
-                  console.log("=======>" + (z++));
-                  $("#latest").prepend('<div class = "row" ><a href="#question/'+msg.id_question+'"><b style = "font-size:14px; color:blue; padding: 25px;">'+msg.question+'</b></a><br><span style = "font-size:13px; color:blue; padding: 25px;">Post by:</span><br><span style = "font-size:13px; color:blue; padding: 25px;"> '+msg.user+'</span></div><br>');
-                  appentNewPage = 1;
-                }
-                appentNewPage = 1;
-              }
-          }
+          
+         
+
         });
 
 
